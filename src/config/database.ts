@@ -1,11 +1,12 @@
-import mysql from "mysql2";
-import * as process from "process";
-import * as module from "module";
+import mysql from 'mysql2';
+import * as process from 'process';
 
 const connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.MYSQL_DB,
+    port: 3306,
+    host: "localhost",
+    user: "root",
+    password: "1234",
+    database: "testinterview",
 });
+
 export default connection;

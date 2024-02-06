@@ -117,7 +117,5 @@
     "skipLibCheck": true
     /* Skip type checking all .d.ts files. */
   },
-  "include": [
-    "src/**/*"
-  ]
+  "include": ["src/**/*.ts", ".env"]
 }
