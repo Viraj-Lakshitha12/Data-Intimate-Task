@@ -2,7 +2,8 @@ import userModel from '../models/userModel';
 import CustomResponse from '../util/customResponse';
 import express from "express";
 import bcrypt from "bcrypt";
-
+import process from "process";
+import jwt, {Secret} from "jsonwebtoken";
 
 // registerUser
 export const registerUser = async (req: express.Request, res: any) => {
@@ -25,11 +26,29 @@ export const loginUser = async (req: express.Request, res: any) => {
     try {
         const {email, password} = req.body;
         const userByEmail: any = await userModel.getUserByEmail({email});
+        const expiresIn = 36000;
 
         if (userByEmail) {
             const isMatchUser: boolean = await bcrypt.compare(password, userByEmail[0].password);
             if (isMatchUser) {
-                res.status(200).send(new CustomResponse(200, 'Login successful', userByEmail));
+                jwt.sign(
+                    {userByEmail},
+                    process.env.SECRET_KEY as Secret,
+                    {expiresIn}, // Set the expiration time
+                    (error: any, token: any) => {
+                        if (error) {
+                            res.status(500).send(new CustomResponse(500, "something went wrong"));
+                        } else {
+                            let req_body: any = {
+                                user: userByEmail,
+                                accessToken: token
+                            }
+                            res.status(200).send(new CustomResponse(200, "Token generated", req_body));
+                        }
+                    }
+                );
+
+                // res.status(200).send(new CustomResponse(200, 'Login successful', userByEmail));
             } else {
                 res.status(401).send(new CustomResponse(401, 'Incorrect password'));
             }
