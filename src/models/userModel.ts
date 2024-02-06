@@ -5,7 +5,7 @@ const userModel = {
         return new Promise((resolve, reject) => {
             connection.query(
                 'INSERT INTO userRegistration (name, email, password,age) VALUES (?, ?, ?,?)',
-                [data.name, data.email, data.password,data.age],
+                [data.name, data.email, data.password, data.age],
                 (err, result, fields) => {
                     if (err) {
                         reject(err);
@@ -16,7 +16,20 @@ const userModel = {
             );
         });
     },
-
+    getAllUsers: () => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                `SELECT *
+                 FROM userRegistration`, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    }
     // Add other methods as needed
 };
 

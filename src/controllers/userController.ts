@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 export const registerUser = async (req: express.Request, res: any) => {
     try {
         const userData = req.body;
-         // Hash the password
+        // Hash the password
         userData.password = await bcrypt.hash(userData.password, 10); // Update the password in the user data
         const result = await userModel.create(userData);
 
@@ -22,5 +22,14 @@ export const registerUser = async (req: express.Request, res: any) => {
 
 //login user
 export const loginUser = async (req: express.Request, res: any) => {
+}
 
+//get all users
+export const getAllUsers = async (req: express.Request, res: any) => {
+    try {
+        let newVar = await userModel.getAllUsers();
+        res.status(200).send(new CustomResponse(200, "all users", newVar));
+    } catch (error) {
+        res.status(500).send(new CustomResponse(500, "something went wrong", error));
+    }
 }
