@@ -1,6 +1,5 @@
 // Import necessary modules
 import express from 'express';
-import create from "./controllers/userController";
 import * as dotenv from 'dotenv';
 import UserRoute from "./routes/userRoute";
 dotenv.config();
@@ -16,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 // user
-app.post('/api/user', UserRoute);
+app.use('/api/user', UserRoute);
 
 
 app.listen(PORT, () => {
