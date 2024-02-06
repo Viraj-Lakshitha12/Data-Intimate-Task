@@ -11,7 +11,11 @@ export const registerUser = async (req: express.Request, res: any) => {
         res.status(201).send(new CustomResponse(201, 'User created successfully', result));
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error creating user' });
+        res.status(500).json({error: 'Error creating user'});
     }
 };
 
+//login user
+export const loginUser = async (req: express.Request, res: any) => {
+
+}
