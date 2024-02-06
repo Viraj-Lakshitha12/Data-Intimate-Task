@@ -1,7 +1,7 @@
 // userController.js
 import userModel from '../models/userModel';
 
-const create = (req:any, res:any) => {
+const registerUser = (req:any, res:any) => {
     const userData = req.body; // Assuming you're sending data in the request bodyc
     console.log(userData);
     userModel.create(userData, (err:any, result:any) => {
@@ -12,4 +12,4 @@ const create = (req:any, res:any) => {
     });
 };
 
-export default create;
+export default registerUser;
