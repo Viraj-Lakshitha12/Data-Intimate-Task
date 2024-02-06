@@ -20,9 +20,28 @@ export const registerUser = async (req: express.Request, res: any) => {
     }
 };
 
-//login user
+// loginUser
 export const loginUser = async (req: express.Request, res: any) => {
-}
+    try {
+        const {email, password} = req.body;
+        const userByEmail: any = await userModel.getUserByEmail({email});
+
+        if (userByEmail) {
+            const isMatchUser: boolean = await bcrypt.compare(password, userByEmail[0].password);
+            if (isMatchUser) {
+                res.status(200).send(new CustomResponse(200, 'Login successful', userByEmail));
+            } else {
+                res.status(401).send(new CustomResponse(401, 'Incorrect password'));
+            }
+        } else {
+            res.status(404).send(new CustomResponse(404, `Cannot find user with email: ${email}`));
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(new CustomResponse(500, 'Something went wrong', error));
+    }
+};
+
 
 //get all users
 export const getAllUsers = async (req: express.Request, res: any) => {

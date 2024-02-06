@@ -1,13 +1,15 @@
 import connection from '../config/database';
 
 const userModel = {
+    // create user
     create: (data: any) => {
         return new Promise((resolve, reject) => {
             connection.query(
-                'INSERT INTO userRegistration (name, email, password,age) VALUES (?, ?, ?,?)',
+                'INSERT INTO userRegistration (name, email, password, age) VALUES (?, ?, ?, ?)',
                 [data.name, data.email, data.password, data.age],
                 (err, result, fields) => {
                     if (err) {
+                        console.error('Error in create method:', err);
                         reject(err);
                     } else {
                         resolve(result);
@@ -16,12 +18,15 @@ const userModel = {
             );
         });
     },
+
+    // get all users
     getAllUsers: () => {
         return new Promise((resolve, reject) => {
             connection.query(
-                `SELECT *
-                 FROM userRegistration`, (err, result) => {
+                'SELECT * FROM userRegistration',
+                (err, result) => {
                     if (err) {
+                        console.error('Error in getAllUsers method:', err);
                         reject(err);
                     } else {
                         resolve(result);
@@ -29,7 +34,26 @@ const userModel = {
                 }
             );
         });
-    }
+    },
+
+    // getUserByEmail
+    getUserByEmail: (data: any) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                'SELECT * FROM userRegistration WHERE email = ?',
+                [data.email],
+                (err, result, fields) => {
+                    if (err) {
+                        console.error('Error in getUserByEmail method:', err);
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    },
+
     // Add other methods as needed
 };
 
