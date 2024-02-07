@@ -88,7 +88,7 @@ export const getUserById = (req: any, res: any) => {
         });
 };
 
-// userController.js
+// user update
 export const updateUser = async (req: express.Request, res: any) => {
     try {
         const {id} = req.params;
@@ -108,5 +108,16 @@ export const updateUser = async (req: express.Request, res: any) => {
 
 //delete user
 export const deleteUser = async (req: express.Request, res: any) => {
-
+    try {
+        let {id} = req.params;
+        let findUserById = await userModel.getUserById(id);
+        if (findUserById) {
+            let deleteUser = await userModel.deleteUser(id);
+            res.status(200).send(new CustomResponse(200, "delete success", deleteUser));
+        } else {
+            res.status(404).send(new CustomResponse(404, `cannot find user id : ${id}`));
+        }
+    } catch (error) {
+        res.status(500).send(new CustomResponse(500, "something went wrong", error));
+    }
 }

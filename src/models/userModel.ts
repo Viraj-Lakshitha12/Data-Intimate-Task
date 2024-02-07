@@ -76,7 +76,7 @@ const userModel = {
     // update user
     updateUser: async (data: any) => {
         try {
-            const { name, email, age, password, id } = data;
+            const {name, email, age, password, id} = data;
 
             // Hash the password if it exists in the update data
             let hashedPassword = password;
@@ -100,6 +100,29 @@ const userModel = {
             });
         } catch (error) {
             console.error('Error in update user method:', error);
+            throw error;
+        }
+    },
+
+    // delete user
+    deleteUser: async (data: any) => {
+        try {
+            return await new Promise((resolve, reject) => {
+                connection.query(
+                    'DELETE FROM userRegistration WHERE id=?',
+                    [data.id],
+                    (err, result, fields) => {
+                        if (err) {
+                            console.error('Error in delete user method:', err);
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    }
+                );
+            });
+        } catch (error) {
+            console.error('Error in delete user method:', error);
             throw error;
         }
     },
