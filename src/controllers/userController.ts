@@ -106,3 +106,7 @@ export const updateUser = async (req: express.Request, res: any) => {
     }
 };
 
+//delete user
+export const deleteUser = async (req: express.Request, res: any) => {
+
+}

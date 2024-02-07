@@ -104,7 +104,6 @@ const userModel = {
         }
     },
 
-    // Add other methods as needed
 };
 
 export default userModel;
