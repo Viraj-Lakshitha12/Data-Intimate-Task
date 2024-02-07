@@ -53,6 +53,7 @@ const userModel = {
             );
         });
     },
+
     // getUserById
     getUserById: (data: any) => {
         return new Promise((resolve, reject) => {
@@ -70,7 +71,6 @@ const userModel = {
             );
         });
     },
-
 
     // update user
     updateUser: (data: any) => {

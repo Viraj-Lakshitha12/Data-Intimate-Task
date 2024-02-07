@@ -71,14 +71,37 @@ export const getAllUsers = async (req: express.Request, res: any) => {
     }
 }
 
+// get user by id
+export const getUserById = (req: any, res: any) => {
+    const userId = req.params.id; // Assuming the user ID is in the request parameters
+    userModel.getUserById({id: userId})
+        .then((result: any) => {
+            if (result.length > 0) {
+                res.status(200).json({message: 'User found', data: result[0]});
+            } else {
+                res.status(404).json({message: 'User not found'});
+            }
+        })
+        .catch((error: any) => {
+            console.error('Error:', error);
+            res.status(500).json({error: 'Error fetching user by ID'});
+        });
+};
+
+
 // update users
 export const updateUser = async (req: express.Request, res: any) => {
     try {
         let {id} = req.params;
+        console.log(id);
+        let userData = req.body;
+        console.log(userData);
         const userById = await userModel.getUserById(id);
-        if (userById){
-
-        }else {
+        if (userById) {
+            console.log(userById)
+            const updateUser = await userModel.updateUser(userData);
+            res.status(200).send(new CustomResponse(200, "successfully update user", updateUser));
+        } else {
             res.status(404).send(new CustomResponse(404, `cannot find user id : ${id}`));
         }
     } catch (error) {
