@@ -20,35 +20,34 @@ export const registerUser = async (req: express.Request, res: any) => {
         res.status(500).json({error: 'Error creating user'});
     }
 };
-
-// loginUser
+// loginUser (check auth)
 export const loginUser = async (req: express.Request, res: any) => {
     try {
-        const {email, password} = req.body;
-        const userByEmail: any = await userModel.getUserByEmail({email});
-        const expiresIn = 36000;
+        const { email, password } = req.body;
+        const userByEmail: any = await userModel.getUserByEmail({ email });
+        const expiresIn = '1h';
 
-        if (userByEmail) {
+        if (userByEmail.length > 0) { // Check if the user is found
             const isMatchUser: boolean = await bcrypt.compare(password, userByEmail[0].password);
+
             if (isMatchUser) {
                 jwt.sign(
-                    {userByEmail},
+                    { user: userByEmail[0] }, // Pass the user object directly
                     process.env.SECRET_KEY as Secret,
-                    {expiresIn}, // Set the expiration time
+                    { expiresIn }, // Set the expiration time
                     (error: any, token: any) => {
                         if (error) {
-                            res.status(500).send(new CustomResponse(500, "something went wrong"));
+                            console.error('JWT Sign Error:', error);
+                            res.status(500).send(new CustomResponse(500, 'Something went wrong'));
                         } else {
-                            let req_body: any = {
-                                user: userByEmail,
+                            const responseData = {
+                                user: userByEmail[0],
                                 accessToken: token
-                            }
-                            res.status(200).send(new CustomResponse(200, "Token generated", req_body));
+                            };
+                            res.status(200).send(new CustomResponse(200, 'Token generated', responseData));
                         }
                     }
                 );
-
-                // res.status(200).send(new CustomResponse(200, 'Login successful', userByEmail));
             } else {
                 res.status(401).send(new CustomResponse(401, 'Incorrect password'));
             }
@@ -56,11 +55,10 @@ export const loginUser = async (req: express.Request, res: any) => {
             res.status(404).send(new CustomResponse(404, `Cannot find user with email: ${email}`));
         }
     } catch (error) {
-        console.error(error);
+        console.error('Login Error:', error);
         res.status(500).send(new CustomResponse(500, 'Something went wrong', error));
     }
 };
-
 
 //get all users
 export const getAllUsers = async (req: express.Request, res: any) => {
