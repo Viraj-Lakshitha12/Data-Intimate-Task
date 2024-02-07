@@ -88,23 +88,21 @@ export const getUserById = (req: any, res: any) => {
         });
 };
 
-
-// update users
+// userController.js
 export const updateUser = async (req: express.Request, res: any) => {
     try {
-        let {id} = req.params;
-        console.log(id);
-        let userData = req.body;
-        console.log(userData);
-        const userById = await userModel.getUserById(id);
-        if (userById) {
-            console.log(userById)
-            const updateUser = await userModel.updateUser(userData);
-            res.status(200).send(new CustomResponse(200, "successfully update user", updateUser));
+        const {id} = req.params;
+        const userData = req.body;
+        const userById: any = await userModel.getUserById({id});
+
+        if (userById.length > 0) {
+            const updateUser = await userModel.updateUser({...userData, id});
+            res.status(200).send(new CustomResponse(200, 'Successfully updated user', updateUser));
         } else {
-            res.status(404).send(new CustomResponse(404, `cannot find user id : ${id}`));
+            res.status(404).send(new CustomResponse(404, `Cannot find user with ID: ${id}`));
         }
     } catch (error) {
-        res.status(500).send(new CustomResponse(500, "something went wrong", error));
+        res.status(500).send(new CustomResponse(500, 'Something went wrong', error));
     }
-}
+};
+

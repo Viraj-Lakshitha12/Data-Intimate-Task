@@ -1,4 +1,5 @@
 import connection from '../config/database';
+import bcrypt from "bcrypt";
 
 const userModel = {
     // create user
@@ -73,22 +74,36 @@ const userModel = {
     },
 
     // update user
-    updateUser: (data: any) => {
-        return new Promise((resolve, reject) => {
-            connection.query(
-                'UPDATE userRegistration SET name=?,email=?,age=?,password=? WHERE id = ?',
-                [data.name, data.email, data.age, data.password, data.id],
-                (err, result, fields) => {
-                    if (err) {
-                        console.error('Error in update user method:', err);
-                        reject(err);
-                    } else {
-                        resolve(result);
+    updateUser: async (data: any) => {
+        try {
+            const { name, email, age, password, id } = data;
+
+            // Hash the password if it exists in the update data
+            let hashedPassword = password;
+            if (password) {
+                hashedPassword = await bcrypt.hash(password, 10);
+            }
+
+            return await new Promise((resolve, reject) => {
+                connection.query(
+                    'UPDATE userRegistration SET name=?, email=?, age=?, password=? WHERE id = ?',
+                    [name, email, age, hashedPassword, id],
+                    (err, result, fields) => {
+                        if (err) {
+                            console.error('Error in update user method:', err);
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
                     }
-                }
-            );
-        });
+                );
+            });
+        } catch (error) {
+            console.error('Error in update user method:', error);
+            throw error;
+        }
     },
+
     // Add other methods as needed
 };
 
