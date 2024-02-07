@@ -109,15 +109,16 @@ export const updateUser = async (req: express.Request, res: any) => {
 //delete user
 export const deleteUser = async (req: express.Request, res: any) => {
     try {
-        let {id} = req.params;
-        let findUserById = await userModel.getUserById(id);
-        if (findUserById) {
-            let deleteUser = await userModel.deleteUser(id);
-            res.status(200).send(new CustomResponse(200, "delete success", deleteUser));
+        const { id } = req.params;
+        const userById: any = await userModel.getUserById({ id });
+
+        if (userById.length > 0) {
+            const deleteUser = await userModel.deleteUser({ id });
+            res.status(200).send(new CustomResponse(200, 'Successfully deleted user', deleteUser));
         } else {
-            res.status(404).send(new CustomResponse(404, `cannot find user id : ${id}`));
+            res.status(404).send(new CustomResponse(404, `Cannot find user with ID: ${id}`));
         }
     } catch (error) {
-        res.status(500).send(new CustomResponse(500, "something went wrong", error));
+        res.status(500).send(new CustomResponse(500, 'Something went wrong', error));
     }
-}
+};
