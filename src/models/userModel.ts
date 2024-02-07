@@ -78,7 +78,6 @@ const userModel = {
         try {
             const {name, email, age, password, id} = data;
 
-            // Hash the password if it exists in the update data
             let hashedPassword = password;
             if (password) {
                 hashedPassword = await bcrypt.hash(password, 10);

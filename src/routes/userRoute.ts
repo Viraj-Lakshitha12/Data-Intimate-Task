@@ -21,6 +21,6 @@ route.get('/get/:id', verifyToken, getUserById);
 route.put('/update/:id', verifyToken, updateUser);
 
 //delete user
-route.delete('/delete/:id', deleteUser);
+route.delete('/delete/:id', verifyToken, deleteUser);
 
 export default route;

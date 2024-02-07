@@ -10,7 +10,7 @@ export const registerUser = async (req: express.Request, res: any) => {
     try {
         const userData = req.body;
         // Hash the password
-        userData.password = await bcrypt.hash(userData.password, 10); // Update the password in the user data
+        userData.password = await bcrypt.hash(userData.password, 10);
         const result = await userModel.create(userData);
 
         // res.status(201).json({ message: 'User created successfully', data: result });
@@ -28,14 +28,14 @@ export const loginUser = async (req: express.Request, res: any) => {
         const userByEmail: any = await userModel.getUserByEmail({email});
         const expiresIn = '1h';
 
-        if (userByEmail.length > 0) { // Check if the user is found
+        if (userByEmail.length > 0) {
             const isMatchUser: boolean = await bcrypt.compare(password, userByEmail[0].password);
 
             if (isMatchUser) {
                 jwt.sign(
-                    {user: userByEmail[0]}, // Pass the user object directly
+                    {user: userByEmail[0]},
                     process.env.SECRET_KEY as Secret,
-                    {expiresIn}, // Set the expiration time
+                    {expiresIn},
                     (error: any, token: any) => {
                         if (error) {
                             console.error('JWT Sign Error:', error);
@@ -73,7 +73,7 @@ export const getAllUsers = async (req: express.Request, res: any) => {
 
 // get user by id
 export const getUserById = (req: any, res: any) => {
-    const userId = req.params.id; // Assuming the user ID is in the request parameters
+    const userId = req.params.id;
     userModel.getUserById({id: userId})
         .then((result: any) => {
             if (result.length > 0) {
