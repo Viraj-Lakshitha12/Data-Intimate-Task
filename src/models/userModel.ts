@@ -53,7 +53,42 @@ const userModel = {
             );
         });
     },
+    // getUserById
+    getUserById: (data: any) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                'SELECT * FROM userRegistration WHERE id = ?',
+                [data.id],
+                (err, result, fields) => {
+                    if (err) {
+                        console.error('Error in getUserById method:', err);
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    },
 
+
+    // update user
+    updateUser: (data: any) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                'UPDATE userRegistration SET name=?,email=?,age=?,password=? WHERE id = ?',
+                [data.name, data.email, data.age, data.password, data.id],
+                (err, result, fields) => {
+                    if (err) {
+                        console.error('Error in update user method:', err);
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            );
+        });
+    },
     // Add other methods as needed
 };
 

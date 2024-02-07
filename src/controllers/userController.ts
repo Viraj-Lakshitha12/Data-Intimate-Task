@@ -20,11 +20,12 @@ export const registerUser = async (req: express.Request, res: any) => {
         res.status(500).json({error: 'Error creating user'});
     }
 };
+
 // loginUser (check auth)
 export const loginUser = async (req: express.Request, res: any) => {
     try {
-        const { email, password } = req.body;
-        const userByEmail: any = await userModel.getUserByEmail({ email });
+        const {email, password} = req.body;
+        const userByEmail: any = await userModel.getUserByEmail({email});
         const expiresIn = '1h';
 
         if (userByEmail.length > 0) { // Check if the user is found
@@ -32,9 +33,9 @@ export const loginUser = async (req: express.Request, res: any) => {
 
             if (isMatchUser) {
                 jwt.sign(
-                    { user: userByEmail[0] }, // Pass the user object directly
+                    {user: userByEmail[0]}, // Pass the user object directly
                     process.env.SECRET_KEY as Secret,
-                    { expiresIn }, // Set the expiration time
+                    {expiresIn}, // Set the expiration time
                     (error: any, token: any) => {
                         if (error) {
                             console.error('JWT Sign Error:', error);
@@ -65,6 +66,21 @@ export const getAllUsers = async (req: express.Request, res: any) => {
     try {
         let newVar = await userModel.getAllUsers();
         res.status(200).send(new CustomResponse(200, "all users", newVar));
+    } catch (error) {
+        res.status(500).send(new CustomResponse(500, "something went wrong", error));
+    }
+}
+
+// update users
+export const updateUser = async (req: express.Request, res: any) => {
+    try {
+        let {id} = req.params;
+        const userById = await userModel.getUserById(id);
+        if (userById){
+
+        }else {
+            res.status(404).send(new CustomResponse(404, `cannot find user id : ${id}`));
+        }
     } catch (error) {
         res.status(500).send(new CustomResponse(500, "something went wrong", error));
     }
