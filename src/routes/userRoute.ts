@@ -1,5 +1,13 @@
 import express, {Router} from "express";
-import {deleteUser, getAllUsers, getUserById, loginUser, registerUser, updateUser} from "../controllers/userController";
+import {
+    deleteUser,
+    getAllUsers,
+    getUserById,
+    loginUser,
+    registerUser,
+    saveUser,
+    updateUser
+} from "../controllers/userController";
 import {verifyToken} from "../auth/verifyToken";
 
 
@@ -8,6 +16,8 @@ const route: Router = express.Router();
 //registerd user
 route.post('/register', registerUser);
 
+//save user
+route.post('/saveUser', verifyToken, saveUser);
 //login user
 route.post('/login', loginUser);
 
